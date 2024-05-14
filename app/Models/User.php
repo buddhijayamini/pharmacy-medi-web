@@ -20,6 +20,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'address',
+        'contact_no',
+        'dob',
+        'role_id',
+        'status'
     ];
 
     /**
@@ -43,5 +48,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function prescriptions(){
+        return $this->hasMany(Prescription::class, 'user_id', 'id');
+    }
+
+    public function isPharmacy()
+    {
+        // Logic to determine if the user is a pharmacy user
+        return $this->role === 'pharmacy';
     }
 }
