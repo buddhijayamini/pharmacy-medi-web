@@ -27,7 +27,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/quotation/admin/{id}',  [QuotationController::class, 'index'])->name('quotation.admin');
     Route::post('/quotation/store',  [QuotationController::class, 'store'])->name('quotation.store');
-
+    Route::get('/quotation/view',  [QuotationController::class, 'listUser'])->name('quotation.view');
+    Route::post('/quotation/{id}/accept', [QuotationController::class, 'accept'])->name('quotation.accept');
+    Route::post('/quotation/{id}/reject', [QuotationController::class, 'reject'])->name('quotation.reject');
 
 
 });

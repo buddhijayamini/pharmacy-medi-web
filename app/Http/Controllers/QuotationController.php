@@ -9,6 +9,7 @@ use App\Models\Prescription;
 use App\Models\QuotationItem;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Throwable;
@@ -96,27 +97,25 @@ class QuotationController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Quotation $quotation)
+    public function listUser()
     {
-        //
+        $quotations = Quotation::where('user_id', Auth::user()->id)->get();
+        return view('quote.quote-view', compact('quotations'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Quotation $quotation)
+    public function accept($id)
     {
-        //
+        $quotation = Quotation::findOrFail($id);
+        $quotation->update(['status' => 'accepted']);
+        // You can send an email notification here if needed
+        return redirect()->back()->with('success', 'Quotation accepted successfully!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Quotation $quotation)
+    public function reject($id)
     {
-        //
+        $quotation = Quotation::findOrFail($id);
+        $quotation->update(['status' => 'rejected']);
+        // You can send an email notification here if needed
+        return redirect()->back()->with('success', 'Quotation rejected successfully!');
     }
 }

@@ -12,4 +12,9 @@ class Quotation extends Model
     protected $table = 'quotations';
 
     protected $guarded = [];
+
+    public function items()
+    {
+        return $this->hasMany(QuotationItem::class, 'quotation_id', 'id');
+    }
 }
