@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Quotation;
 use App\Http\Controllers\Controller;
+use App\Mail\QuotationNotification;
 use App\Models\Prescription;
 use App\Models\QuotationItem;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Throwable;
 
 class QuotationController extends Controller
@@ -66,6 +69,10 @@ class QuotationController extends Controller
 
             // Commit the transaction
             DB::commit();
+
+             // Send email notification to the user
+             $user = User::findOrFail($request->user_id);
+             Mail::to($user->email)->send(new QuotationNotification($quotation));
 
             // Redirect back with a success message
             return redirect()->back()->with('success', 'Quotation added successfully!');
