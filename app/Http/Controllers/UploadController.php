@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Prescription;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Throwable;
+use Yajra\DataTables\DataTables;
 
 class UploadController extends Controller
 {
@@ -33,9 +36,28 @@ class UploadController extends Controller
     {
         $deliverySlots = $this->generateTimeSlots();
 
-        return view('upload', compact('deliverySlots'));
+        return view('prescription.upload', compact('deliverySlots'));
     }
 
+    public function view()
+    {
+        return view('prescription.index');
+    }
+
+    public function data()
+    {
+        $userId = Auth()->user()->id;
+
+        $prescriptions = Prescription::where('user_id', $userId)->get();
+
+        return DataTables::of($prescriptions)
+            ->addColumn('action', function ($prescription) {
+                return '<button class="btn btn-sm btn-primary view-prescription" data-prescription-id="' . $prescription->id . '">View</button>';
+            })
+            ->toJson();
+    }
+
+    
     public function upload(Request $request)
     {
         try {
