@@ -5,20 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Prescription extends Model
+class Quotation extends Model
 {
     use HasFactory;
 
-    protected $table = 'prescriptions';
+    protected $table = 'quotations';
 
     protected $guarded = [];
 
-    public function user(){
+    public function pharmacy(){
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function images()
+    public function items()
     {
-        return $this->hasMany(PrescriptionImage::class, 'prescription_id', 'id');
+        return $this->hasMany(QuotationItem::class, 'quotation_id', 'id');
     }
 }

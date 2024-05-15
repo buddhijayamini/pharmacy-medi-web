@@ -50,13 +50,19 @@ class User extends Authenticatable
         ];
     }
 
-    public function prescriptions(){
+    public function prescriptions()
+    {
         return $this->hasMany(Prescription::class, 'user_id', 'id');
+    }
+
+    public function role()
+    {
+        return $this->hasOne(Role::class, 'role_id', 'id');
     }
 
     public function isPharmacy()
     {
-        // Logic to determine if the user is a pharmacy user
-        return $this->role === 'pharmacy';
+        // Assuming role_id of 1 corresponds to pharmacy users
+        return $this->role->id === 1;
     }
 }
