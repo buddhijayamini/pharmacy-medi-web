@@ -58,8 +58,7 @@
             processing: true,
             serverSide: true,
             ajax: '{{ route('prescription.data.admin') }}',
-            columns: [
-                {
+            columns: [{
                     data: 'id',
                     name: 'id'
                 },

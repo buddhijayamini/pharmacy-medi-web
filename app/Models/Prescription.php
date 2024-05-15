@@ -19,6 +19,6 @@ class Prescription extends Model
 
     public function images()
     {
-        return $this->hasMany(PrescriptionImage::class);
+        return $this->hasMany(PrescriptionImage::class, 'prescription_id', 'id');
     }
 }

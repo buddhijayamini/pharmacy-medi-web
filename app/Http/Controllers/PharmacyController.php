@@ -30,7 +30,8 @@ class PharmacyController extends Controller
 
         return DataTables::of($prescriptions)
             ->addColumn('action', function ($prescription) {
-                return '<button class="btn btn-sm btn-primary view-prescription" data-prescription-id="' . $prescription->id . '">View</button>';
+                return '<button class="btn btn-sm btn-primary view-prescription" data-prescription-id="' . $prescription->id . '">View</button>
+                <a class="btn btn-sm btn-success add-quote" href="/quotation/admin/'. $prescription->id . '" style="margin: left 2px;"> +Quote </a>';
             })
             ->addColumn('user', function ($prescription) {
                 return $prescription->user->name;
