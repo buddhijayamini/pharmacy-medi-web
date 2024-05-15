@@ -49,6 +49,22 @@
                                 </li>
                             @endif
                         @else
+                        @if (auth()->user()->id === 1)
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('prescription.admin') }}">{{ __('Prescription') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('quotation.list.admin') }}">{{ __('Quotation') }}</a>
+                        </li>
+                        @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('prescription') }}">{{ __('Prescription') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('quotation.user.view') }}">{{ __('Quotation') }}</a>
+                        </li>
+                        @endif
+
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}

@@ -25,13 +25,16 @@
                     @endif
                     <form method="post" action="{{ route('quotation.store') }}" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="prescription_id" value="{{ $data->id }}" />
-                        <input type="hidden" name="user_id" value="{{ $data->user_id }}" />
+                        <input type="hidden" name="prescription_id" value="{{ $data->id ?? ''}}" />
+                        <input type="hidden" name="user_id" value="{{ $data->user_id  ?? ''}}" />
                         <div class="row">
                             <div class="col-sm-4 p-8 text-black">
                                 <div class="form-group">
                                     <label for="img"> Prescription Image: </label>
-                                    <img class="form-control image" src="{{ asset("storage/".$data->images[0]->image_path) }}" style="height:350px" title="Prescription" />
+                                    @if ($data && isset($data->images[0]->image_path))
+                                    <img class="form-control image" src="{{ asset('storage/' . $data->images[0]->image_path) }}" style="height:350px" title="Prescription" />
+                                @endif
+
                                 </div>
                             </div>
                             <div class="col-sm-8 p-3 text-black">

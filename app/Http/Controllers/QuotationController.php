@@ -8,6 +8,7 @@ use App\Mail\QuotationNotification;
 use App\Models\Prescription;
 use App\Models\QuotationItem;
 use App\Models\User;
+use App\Notifications\QuotationStatusNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -71,9 +72,9 @@ class QuotationController extends Controller
             // Commit the transaction
             DB::commit();
 
-             // Send email notification to the user
-             $user = User::findOrFail($request->user_id);
-             Mail::to($user->email)->send(new QuotationNotification($quotation));
+            // Send email notification to the user
+            $user = User::findOrFail($request->user_id);
+            Mail::to($user->email)->send(new QuotationNotification($quotation));
 
             // Redirect back with a success message
             return redirect()->back()->with('success', 'Quotation added successfully!');
@@ -92,21 +93,33 @@ class QuotationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Quotation $quotation)
+    public function show($id)
     {
-        //
+        $quotation = Quotation::findOrFail($id);
+
+        return view('quote.quote', compact('quotation'));
+    }
+
+    public function listAdmin()
+    {
+        $quotations = Quotation::all();
+        return view('quote.admin-view', compact('quotations'));
     }
 
     public function listUser()
     {
         $quotations = Quotation::where('user_id', Auth::user()->id)->get();
-        return view('quote.quote-view', compact('quotations'));
+        return view('quote.user-view', compact('quotations'));
     }
 
     public function accept($id)
     {
         $quotation = Quotation::findOrFail($id);
         $quotation->update(['status' => 'accepted']);
+
+        // Notify the pharmacy
+        $quotation->pharmacy->notify(new QuotationStatusNotification($quotation, 'accepted'));
+
         // You can send an email notification here if needed
         return redirect()->back()->with('success', 'Quotation accepted successfully!');
     }
@@ -115,6 +128,11 @@ class QuotationController extends Controller
     {
         $quotation = Quotation::findOrFail($id);
         $quotation->update(['status' => 'rejected']);
+
+        // Notify the pharmacy
+        $quotation->pharmacy->notify(new QuotationStatusNotification($quotation, 'rejected'));
+
+
         // You can send an email notification here if needed
         return redirect()->back()->with('success', 'Quotation rejected successfully!');
     }
